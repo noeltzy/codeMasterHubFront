@@ -4,7 +4,7 @@ import CourseDetail from '@/views/course/detail.vue'
 
 export default [
   {
-    path: '/course',
+    path: '/study',
     name: ROUTE_NAMES.STUDY,
     component: CourseList,
     meta: {

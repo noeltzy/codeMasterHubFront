@@ -27,29 +27,40 @@
       </div>
 
       <div class="header-right">
-        <el-dropdown v-if="userInfo" trigger="click" @command="handleCommand">
-          <div class="user-info">
-            <el-avatar :size="32" :src="userInfo.avatar">
-              {{ userInfo.nickname?.charAt(0) }}
-            </el-avatar>
-            <span class="nickname">{{ userInfo.nickname }}</span>
-          </div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-              <el-dropdown-item command="logout" divided
-                >退出登录</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <template v-if="userInfo">
+          <el-dropdown trigger="click" @command="handleCommand">
+            <div class="user-info">
+              <el-avatar :size="32" :src="userInfo.avatar">
+                {{ userInfo.nickname?.charAt(0) }}
+              </el-avatar>
+              <span class="nickname">{{ userInfo.nickname }}</span>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+                <el-dropdown-item command="logout" divided
+                  >退出登录</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+        <template v-else>
+          <el-button
+            type="primary"
+            @click="$router.push('/login')"
+            class="login-button"
+          >
+            登录
+          </el-button>
+        </template>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { userApi } from '@/api/modules/user'
 import { auth } from '@/utils/auth'
@@ -60,27 +71,15 @@ const route = useRoute()
 
 const userInfo = ref(auth.getUserInfo())
 
-const updateUserInfo = async () => {
-  try {
-    const result = await userApi.getCurrentUser()
-    if (result.success) {
-      auth.setUserInfo(result.data)
-      userInfo.value = result.data
-    }
-  } catch (error) {
-    console.error('获取用户信息失败:', error)
-  }
-}
-
 const navItems = [
   { title: '主页', path: '/', icon: 'House' },
-  { title: '课程', path: '/course', icon: 'Reading' },
+  { title: '学习', path: '/study', icon: 'Reading' },
   { title: '教程', path: '/tutorial', icon: 'Document' },
   { title: '问答', path: '/qa', icon: 'QuestionFilled' },
   { title: '求职', path: '/job', icon: 'Briefcase' },
   { title: '直播', path: '/live', icon: 'VideoCamera' },
   { title: '词典', path: '/dict', icon: 'Collection' },
-  { title: '资讯', path: '/news', icon: 'Bell' },
+  { title: '资讯', path: '/news', icon: 'Bell' }
 ]
 
 const activeRoute = computed(() => route.path)
@@ -104,12 +103,6 @@ const handleCommand = async (command) => {
     }
   }
 }
-
-onMounted(() => {
-  if (auth.isAuthenticated()) {
-    updateUserInfo()
-  }
-})
 </script>
 
 <style scoped>
@@ -181,5 +174,10 @@ onMounted(() => {
 .nickname {
   font-size: 14px;
   color: var(--el-text-color-regular);
+}
+
+.login-button {
+  padding: 8px 24px;
+  font-size: 14px;
 }
 </style>
