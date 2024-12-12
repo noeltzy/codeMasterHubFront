@@ -12,8 +12,8 @@
           :ellipsis="false"
           @select="handleSelect"
         >
-          <el-menu-item 
-            v-for="item in navItems" 
+          <el-menu-item
+            v-for="item in navItems"
             :key="item.path"
             :index="item.path"
             :class="{ 'is-active': activeRoute === item.path }"
@@ -37,7 +37,9 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-              <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
+              <el-dropdown-item command="logout" divided
+                >退出登录</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -72,13 +74,13 @@ const updateUserInfo = async () => {
 
 const navItems = [
   { title: '主页', path: '/', icon: 'House' },
-  { title: '学习', path: '/study', icon: 'Reading' },
+  { title: '课程', path: '/course', icon: 'Reading' },
   { title: '教程', path: '/tutorial', icon: 'Document' },
   { title: '问答', path: '/qa', icon: 'QuestionFilled' },
   { title: '求职', path: '/job', icon: 'Briefcase' },
   { title: '直播', path: '/live', icon: 'VideoCamera' },
   { title: '词典', path: '/dict', icon: 'Collection' },
-  { title: '资讯', path: '/news', icon: 'Bell' }
+  { title: '资讯', path: '/news', icon: 'Bell' },
 ]
 
 const activeRoute = computed(() => route.path)

@@ -4,13 +4,13 @@ import CourseDetail from '@/views/course/detail.vue'
 
 export default [
   {
-    path: '/study',
+    path: '/course',
     name: ROUTE_NAMES.STUDY,
     component: CourseList,
     meta: {
       requiresAuth: true,
       nav: {
-        title: '学习',
+        title: '课程',
         icon: 'Reading',
         order: 2
       }
