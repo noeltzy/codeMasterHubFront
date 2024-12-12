@@ -1,24 +1,28 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { userApi } from '../api/user'
+import { userApi } from '@/api/modules/user'
 import { ElMessage } from 'element-plus'
 import { Plus, Edit } from '@element-plus/icons-vue'
-import { courseApi } from '../api/course'
+import { courseApi } from '@/api/modules/course'
 
 const userInfo = ref(null)
 const loading = ref(true)
 const uploadLoading = ref(false)
 const editMode = ref(false)
 const editForm = ref({
-  nickname: ''
+  nickname: '',
 })
 
 // 监听用户信息变化，更新编辑表单
-watch(() => userInfo.value, (newVal) => {
-  if (newVal) {
-    editForm.value.nickname = newVal.nickname
-  }
-}, { immediate: true })
+watch(
+  () => userInfo.value,
+  (newVal) => {
+    if (newVal) {
+      editForm.value.nickname = newVal.nickname
+    }
+  },
+  { immediate: true }
+)
 
 const loadUserInfo = async () => {
   try {
@@ -39,7 +43,7 @@ const loadUserInfo = async () => {
 const handleAvatarSuccess = async (file) => {
   try {
     uploadLoading.value = true
-    
+
     // 上传头像
     const uploadResult = await userApi.uploadAvatar(file)
     if (!uploadResult.success) {
@@ -50,7 +54,7 @@ const handleAvatarSuccess = async (file) => {
     // 更新用户信息
     const updateResult = await userApi.updateUserInfo({
       id: userInfo.value.id,
-      avatar: uploadResult.data
+      avatar: uploadResult.data,
     })
 
     if (updateResult.success) {
@@ -81,7 +85,7 @@ const handleSaveNickname = async () => {
     loading.value = true
     const result = await userApi.updateUserInfo({
       id: userInfo.value.id,
-      nickname: editForm.value.nickname.trim()
+      nickname: editForm.value.nickname.trim(),
     })
 
     if (result.success) {
@@ -129,9 +133,9 @@ const loadFavoriteCourses = async () => {
     favoritesLoading.value = true
     const result = await courseApi.getFavoriteCourses()
     if (result.success) {
-      favoriteCourses.value = result.data.map(course => ({
+      favoriteCourses.value = result.data.map((course) => ({
         ...course,
-        unfavoriteLoading: false
+        unfavoriteLoading: false,
       }))
     } else {
       ElMessage.error(result.message)
@@ -153,7 +157,9 @@ const handleUnfavorite = async (course) => {
     if (result.success) {
       ElMessage.success('已取消收藏')
       // 从列表中移除该课程
-      favoriteCourses.value = favoriteCourses.value.filter(item => item.id !== course.id)
+      favoriteCourses.value = favoriteCourses.value.filter(
+        (item) => item.id !== course.id
+      )
     } else {
       ElMessage.error(result.message)
     }
@@ -184,21 +190,21 @@ onMounted(async () => {
               :before-upload="beforeAvatarUpload"
               :http-request="({ file }) => handleAvatarSuccess(file)"
             >
-              <el-avatar 
+              <el-avatar
                 v-loading="uploadLoading"
-                :size="120" 
+                :size="120"
                 :src="userInfo?.avatar"
                 :fallback="'https://placeholder.co/120x120'"
               >
                 <el-icon class="avatar-upload-icon"><Plus /></el-icon>
               </el-avatar>
             </el-upload>
-            
+
             <div class="user-info">
               <div v-if="!editMode" class="nickname-display">
                 <h3>{{ userInfo?.nickname }}</h3>
-                <el-button 
-                  type="primary" 
+                <el-button
+                  type="primary"
                   link
                   :icon="Edit"
                   @click="handleEditNickname"
@@ -207,7 +213,7 @@ onMounted(async () => {
                 </el-button>
               </div>
               <div v-else class="nickname-edit">
-                <el-input 
+                <el-input
                   v-model="editForm.nickname"
                   placeholder="请输入昵称"
                   maxlength="20"
@@ -218,9 +224,7 @@ onMounted(async () => {
                   <el-button type="primary" @click="handleSaveNickname">
                     保存
                   </el-button>
-                  <el-button @click="handleCancelEdit">
-                    取消
-                  </el-button>
+                  <el-button @click="handleCancelEdit"> 取消 </el-button>
                 </div>
               </div>
               <p class="username">@{{ userInfo?.username }}</p>
@@ -247,7 +251,11 @@ onMounted(async () => {
               </el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="最后登录时间">
-              {{ userInfo?.lastLoginTime ? new Date(userInfo.lastLoginTime).toLocaleString() : '-' }}
+              {{
+                userInfo?.lastLoginTime
+                  ? new Date(userInfo.lastLoginTime).toLocaleString()
+                  : '-'
+              }}
             </el-descriptions-item>
           </el-descriptions>
         </el-card>
@@ -258,11 +266,7 @@ onMounted(async () => {
             <div class="card-header">
               <div class="header-left">
                 <h3>收藏的课程</h3>
-                <el-tag 
-                  type="info" 
-                  size="small" 
-                  class="course-count"
-                >
+                <el-tag type="info" size="small" class="course-count">
                   共 {{ favoriteCourses.length }} 门
                 </el-tag>
               </div>
@@ -271,13 +275,13 @@ onMounted(async () => {
 
           <div v-if="favoriteCourses.length > 0" class="favorites-list">
             <el-row :gutter="20">
-              <el-col 
-                v-for="course in favoriteCourses" 
+              <el-col
+                v-for="course in favoriteCourses"
                 :key="course.id"
                 :span="12"
               >
-                <el-card 
-                  class="favorite-course-card" 
+                <el-card
+                  class="favorite-course-card"
                   shadow="hover"
                   @click="$router.push(`/course/${course.id}`)"
                 >
@@ -294,7 +298,9 @@ onMounted(async () => {
                     <div class="course-info">
                       <h4 class="course-title">{{ course.name }}</h4>
                       <div class="course-meta">
-                        <span class="instructor">{{ course.instructorName }}</span>
+                        <span class="instructor">{{
+                          course.instructorName
+                        }}</span>
                         <span class="price">￥{{ course.price }}</span>
                       </div>
                     </div>
@@ -303,15 +309,8 @@ onMounted(async () => {
               </el-col>
             </el-row>
           </div>
-          <el-empty 
-            v-else 
-            description="暂无收藏课程"
-            :image-size="100"
-          >
-            <el-button 
-              type="primary" 
-              @click="$router.push('/study')"
-            >
+          <el-empty v-else description="暂无收藏课程" :image-size="100">
+            <el-button type="primary" @click="$router.push('/study')">
               去学习
             </el-button>
           </el-empty>
@@ -511,4 +510,4 @@ onMounted(async () => {
   font-weight: normal;
   border-radius: 10px;
 }
-</style> 
+</style>

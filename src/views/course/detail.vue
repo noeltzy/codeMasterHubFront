@@ -6,11 +6,7 @@
           <el-icon><arrow-left /></el-icon>
           返回
         </el-button>
-        <el-button 
-          link 
-          class="favorite-btn"
-          @click="toggleFavorite"
-        >
+        <el-button link class="favorite-btn" @click="toggleFavorite">
           <el-icon>
             <star-filled v-if="isFavorite" />
             <star v-else />
@@ -51,7 +47,7 @@
         <div class="course-content">
           <h2>课程介绍</h2>
           <div class="description">{{ courseDetail.description }}</div>
-          
+
           <h2>课程大纲</h2>
           <div class="outline">
             <el-collapse v-model="activeChapters">
@@ -62,14 +58,16 @@
                 :name="chapter.id"
               >
                 <div class="chapter-lessons">
-                  <div 
-                    v-for="lesson in chapter.lessons" 
+                  <div
+                    v-for="lesson in chapter.lessons"
                     :key="lesson.id"
                     class="lesson-item"
                   >
                     <el-icon><video-camera /></el-icon>
                     <span class="lesson-title">{{ lesson.title }}</span>
-                    <span class="lesson-duration">{{ lesson.duration }}分钟</span>
+                    <span class="lesson-duration"
+                      >{{ lesson.duration }}分钟</span
+                    >
                   </div>
                 </div>
               </el-collapse-item>
@@ -77,11 +75,7 @@
           </div>
         </div>
       </template>
-      <el-empty 
-        v-else 
-        :image-size="200" 
-        description="课程不存在或已下架"
-      >
+      <el-empty v-else :image-size="200" description="课程不存在或已下架">
         <template #description>
           <p>该课程可能已被删除或暂时下架</p>
           <el-button type="primary" @click="$router.push('/study')">
@@ -99,8 +93,12 @@ import { useRoute, useRouter } from 'vue-router'
 import PageLayout from '@/layouts/PageLayout.vue'
 import { courseApi } from '@/api/modules/course'
 import { ElMessage } from 'element-plus'
-import { VideoCamera, ArrowLeft, Star, StarFilled } from '@element-plus/icons-vue'
-import { ROUTE_NAMES } from '@/config/constants'
+import {
+  VideoCamera,
+  ArrowLeft,
+  Star,
+  StarFilled,
+} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -250,4 +248,4 @@ onMounted(() => {
     font-size: 13px;
   }
 }
-</style> 
+</style>
