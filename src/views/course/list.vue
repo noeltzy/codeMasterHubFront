@@ -2,19 +2,17 @@
   <page-layout title="学习">
     <template #header-extra>
       <div class="tag-filter" v-loading="loading">
-        <el-tabs
-          v-model="selectedTag"
-          @tab-change="handleTagChange"
-          type="border-card"
-          class="demo-tabs"
-        >
-          <el-tab-pane
+        <div class="tag-list">
+          <div
             v-for="tag in tags"
             :key="tag.id"
-            :label="tag.name"
-            :name="tag.id"
-          />
-        </el-tabs>
+            class="tag-item"
+            :class="{ active: selectedTag === tag.id }"
+            @click="handleTagChange(tag.id)"
+          >
+            {{ tag.name }}
+          </div>
+        </div>
       </div>
     </template>
 
@@ -90,7 +88,7 @@
       </template>
       <el-empty v-else :image-size="200" description="暂无相关课程">
         <template #description>
-          <p>��前分类下暂无课程内容</p>
+          <p>当前分类下暂无课程内容</p>
           <p class="empty-tip">可以切换其他分类查看更多课程</p>
         </template>
       </el-empty>
@@ -192,27 +190,39 @@ onMounted(() => {
   padding: 16px 0;
 }
 
-.demo-tabs {
-  margin-bottom: 20px;
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 20px;
 }
 
-:deep(.el-tabs__nav) {
-  border: none !important;
+.tag-item {
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-regular);
 }
 
-:deep(.el-tabs__item) {
-  padding: 0 20px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  font-size: 14px !important;
+.tag-item:hover {
+  background: var(--el-color-primary-light-8);
+  color: var(--el-color-primary);
 }
 
-:deep(.el-tabs__item.is-active) {
-  font-weight: 500 !important;
+.tag-item.active {
+  background: var(--el-color-primary);
+  color: white;
 }
 
 .study-content {
-  margin-top: 20px;
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .course-card {
