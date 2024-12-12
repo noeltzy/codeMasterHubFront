@@ -1,23 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import StudyView from '../views/StudyView.vue'
-import TutorialView from '../views/TutorialView.vue'
-import QAView from '../views/QAView.vue'
-import JobView from '../views/JobView.vue'
-import LiveView from '../views/LiveView.vue'
-import DictView from '../views/DictView.vue'
-import NewsView from '../views/NewsView.vue'
-import ProfileView from '../views/ProfileView.vue'
+import { auth } from '@/utils/auth'
+import HomeView from '../views/home/index.vue'
+import courseRoutes from './modules/course'
+import userRoutes from './modules/user'
 
 const routes = [
-    {
-        path: '/login',
-        name: 'login',
-        component: () => import('../views/LoginView.vue'),
-        meta: {
-            hideHeader: true
-        }
-    },
     {
         path: '/',
         name: 'home',
@@ -31,23 +18,12 @@ const routes = [
             }
         }
     },
-    {
-        path: '/study',
-        name: 'study',
-        component: StudyView,
-        meta: {
-            requiresAuth: true,
-            nav: {
-                title: '学习',
-                icon: 'Reading',
-                order: 2
-            }
-        }
-    },
+    ...courseRoutes,
+    ...userRoutes,
     {
         path: '/tutorial',
         name: 'tutorial',
-        component: TutorialView,
+        component: () => import('../views/tutorial/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -60,7 +36,7 @@ const routes = [
     {
         path: '/qa',
         name: 'qa',
-        component: QAView,
+        component: () => import('../views/qa/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -73,7 +49,7 @@ const routes = [
     {
         path: '/job',
         name: 'job',
-        component: JobView,
+        component: () => import('../views/job/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -86,7 +62,7 @@ const routes = [
     {
         path: '/live',
         name: 'live',
-        component: LiveView,
+        component: () => import('../views/live/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -99,7 +75,7 @@ const routes = [
     {
         path: '/dict',
         name: 'dict',
-        component: DictView,
+        component: () => import('../views/dict/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -112,7 +88,7 @@ const routes = [
     {
         path: '/news',
         name: 'news',
-        component: NewsView,
+        component: () => import('../views/news/index.vue'),
         meta: {
             requiresAuth: true,
             nav: {
@@ -123,21 +99,12 @@ const routes = [
         }
     },
     {
-        path: '/profile',
-        name: 'profile',
-        component: ProfileView,
+        path: '/:pathMatch(.*)*',
+        name: 'notFound',
+        component: () => import('../views/error/404.vue'),
         meta: {
-            requiresAuth: true,
-            hideNav: true
-        }
-    },
-    {
-        path: '/course/:id',
-        name: 'courseDetail',
-        component: () => import('../views/CourseDetailView.vue'),
-        meta: {
-            requiresAuth: true,
-            hideNav: true
+            hideNav: true,
+            hideHeader: true
         }
     }
 ]
@@ -148,9 +115,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('isLoggedIn')
-
-    if (to.meta.requiresAuth && !isAuthenticated) {
+    if (to.meta.requiresAuth && !auth.isAuthenticated()) {
         next('/login')
     } else {
         next()

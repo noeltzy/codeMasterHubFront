@@ -1,8 +1,8 @@
-import { request } from '../utils/request'
+import { request } from '../../utils/request'
 
 export const tagApi = {
   // 获取所有标签
   async getAllTags() {
-    return request('/tags/all')
+    return request('/tag/all')
   }
 } 

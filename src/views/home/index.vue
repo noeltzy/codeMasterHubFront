@@ -24,7 +24,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import PageLayout from '@/layouts/PageLayout.vue'
-import { userApi } from '@/api/user'
+import { userApi } from '@/api/modules/user'
 
 const userInfo = ref(null)
 

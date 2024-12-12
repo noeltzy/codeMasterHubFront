@@ -2,15 +2,19 @@
   <page-layout title="学习">
     <template #header-extra>
       <div class="tag-filter" v-loading="loading">
-        <el-radio-group
+        <el-tabs
           v-model="selectedTag"
-          @change="handleTagChange"
-          size="large"
+          @tab-change="handleTagChange"
+          type="border-card"
+          class="demo-tabs"
         >
-          <el-radio-button v-for="tag in tags" :key="tag.id" :label="tag.id">
-            {{ tag.name }}
-          </el-radio-button>
-        </el-radio-group>
+          <el-tab-pane
+            v-for="tag in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :name="tag.id"
+          />
+        </el-tabs>
       </div>
     </template>
 
@@ -63,7 +67,7 @@
                   <el-button 
                     type="primary" 
                     link 
-                    @click="$router.push(`/course/${course.id}`)"
+                    @click="handleCourseDetail(course.id)"
                   >
                     查看详情
                   </el-button>
@@ -86,7 +90,7 @@
       </template>
       <el-empty v-else :image-size="200" description="暂无相关课程">
         <template #description>
-          <p>当前分类下暂无课程内容</p>
+          <p>��前分类下暂无课程内容</p>
           <p class="empty-tip">可以切换其他分类查看更多课程</p>
         </template>
       </el-empty>
@@ -96,11 +100,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import PageLayout from '@/layouts/PageLayout.vue'
-import { tagApi } from '@/api/tag'
-import { courseApi } from '@/api/course'
+import { tagApi } from '@/api/modules/tag'
+import { courseApi } from '@/api/modules/course'
 import { ElMessage } from 'element-plus'
+import { ROUTE_NAMES } from '@/config/constants'
 
+const router = useRouter()
+const activeTab = ref(ROUTE_NAMES.STUDY)
 const tags = ref([])
 const selectedTag = ref(null)
 const loading = ref(false)
@@ -166,6 +174,14 @@ const handleCurrentChange = async (current) => {
   await loadCourses()
 }
 
+const handleCourseDetail = (courseId) => {
+  console.log('跳转到课程详情，课程ID:', courseId)
+  router.push(`/course/${courseId}`).catch(err => {
+    console.error('路由跳转错误:', err)
+    ElMessage.error('页面跳转失败')
+  })
+}
+
 onMounted(() => {
   loadTags()
 })
@@ -176,14 +192,23 @@ onMounted(() => {
   padding: 16px 0;
 }
 
-:deep(.el-radio-group) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.demo-tabs {
+  margin-bottom: 20px;
 }
 
-:deep(.el-radio-button__inner) {
-  border-radius: 20px !important;
+:deep(.el-tabs__nav) {
+  border: none !important;
+}
+
+:deep(.el-tabs__item) {
+  padding: 0 20px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 14px !important;
+}
+
+:deep(.el-tabs__item.is-active) {
+  font-weight: 500 !important;
 }
 
 .study-content {
@@ -203,6 +228,16 @@ onMounted(() => {
 .course-image {
   width: 100%;
   height: 160px;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  color: #909399;
 }
 
 .course-info {
@@ -256,20 +291,5 @@ onMounted(() => {
   color: var(--el-text-color-secondary);
   font-size: 14px;
   margin-top: 8px;
-}
-
-:deep(.el-empty) {
-  padding: 60px 0;
-}
-
-.image-placeholder {
-  width: 100%;
-  height: 160px;
-  background: #f5f7fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
 }
 </style>

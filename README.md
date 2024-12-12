@@ -58,15 +58,48 @@ npm run build
 
 ```
 src/
-  ├── api/          # API 接口
-  ├── assets/       # 静态资源
-  ├── components/   # 公共组件
-  ├── layouts/      # 布局组件
-  ├── router/       # 路由配置
-  ├── utils/        # 工具函数
-  ├── views/        # 页面组件
-  ├── App.vue      # 根组件
-  └── main.js      # 入口文件
+  ├── api/                # API 接口
+  │   ├── modules/        # API 模块
+  │   └── index.js        # API 统一导出
+  │
+  ├── assets/             # 静态资源
+  │   ├── images/         # 图片资源
+  │   ├── styles/         # 样式文件
+  │   └── icons/          # 图标文件
+  │
+  ├── components/         # 公共组件
+  │   ├── common/         # 通用组件
+  │   └── business/       # 业务组件
+  │
+  ├── composables/        # 组合式函数
+  │
+  ├── config/            # 配置文件
+  │   └── constants.js   # 常量配置
+  │
+  ├── layouts/           # 布局组件
+  │
+  ├── router/            # 路由配置
+  │   ├── modules/       # 路由模块
+  │   └── index.js       # 路由主文件
+  │
+  ├── stores/            # Pinia 状态管理
+  │   ├── modules/       # 状态模块
+  │   └── index.js       # 状态管理主文件
+  │
+  ├── utils/             # 工具函数
+  │   ├── request.js     # 请求工具
+  │   ├── auth.js        # 认证工具
+  │   └── helpers.js     # 辅助函数
+  │
+  ├── views/             # 页面组件
+  │   ├── home/          # 主页相关
+  │   ├── study/         # 学习相关
+  │   ├── course/        # 课程相关
+  │   ├── user/          # 用户相关
+  │   └── error/         # 错误页面
+  │
+  ├── App.vue            # 根组件
+  └── main.js            # 入口文件
 ```
 
 ## API 接口
